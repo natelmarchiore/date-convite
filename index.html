@@ -225,7 +225,7 @@
         let vibeSelected = '';
         let phoneNumber = '';
 
-        const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwdd4zEDSxRCLqqJcC1doyh6yrZeLmICpcs3u_zpfyPZR3XjKFKa4bYLwmNwYvXpu5B/exec';
+        const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycby_NgoU2_u-4Vt7XDu6kOG0JGeNDM0WEKdI1Sv7HVuluDK_iF2phLoR_SDhWzoY0LLU/exec';
 
         // No button behavior - runs away
         document.getElementById('noBtn').addEventListener('mouseover', function() {
@@ -267,18 +267,19 @@
         }
 
         function sendToGoogleSheets() {
-            const data = {
-                date: dateSelected,
-                time: timeSelected,
-                food: foodSelected,
-                vibe: vibeSelected,
-                phone: phoneNumber
-            };
+            const formData = new FormData();
+            formData.append('date', dateSelected);
+            formData.append('time', timeSelected);
+            formData.append('food', foodSelected);
+            formData.append('vibe', vibeSelected);
+            formData.append('phone', phoneNumber);
 
             fetch(GOOGLE_SHEETS_URL, {
                 method: 'POST',
-                body: JSON.stringify(data)
-            }).catch(error => console.log('Data sent to Google Sheets'));
+                body: formData
+            })
+            .then(response => console.log('Data sent successfully'))
+            .catch(error => console.log('Error sending data:', error));
         }
 
         function finish() {
