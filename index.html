@@ -234,8 +234,12 @@
         }
 
         function finish() {
+            // Get values FIRST
+            dateSelected = document.getElementById('date').value;
+            timeSelected = document.getElementById('time').value;
             phoneNumber = document.getElementById('phone').value;
 
+            // Then validate
             if (!phoneNumber) {
                 alert('Por favor, insira seu WhatsApp!');
                 return;
@@ -245,9 +249,6 @@
                 alert('Por favor, escolha data e horário!');
                 return;
             }
-
-            dateSelected = document.getElementById('date').value;
-            timeSelected = document.getElementById('time').value;
 
             next(6);
             displayResult();
