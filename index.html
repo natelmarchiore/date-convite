@@ -35,17 +35,16 @@
         }
 
         .step {
-            display: none;
+            display: none !important;
             text-align: center;
             padding: 20px;
             height: 100%;
-            display: flex;
             flex-direction: column;
             justify-content: center;
         }
 
         .active {
-            display: flex;
+            display: flex !important;
         }
 
         h1 {
@@ -236,19 +235,23 @@
 
         function finish() {
             phoneNumber = document.getElementById('phone').value;
+            dateSelected = document.getElementById('date').value;
+            timeSelected = document.getElementById('time').value;
+
+            if (!dateSelected) {
+                alert('Por favor, escolha uma data!');
+                return;
+            }
+
+            if (!timeSelected) {
+                alert('Por favor, escolha um horário!');
+                return;
+            }
 
             if (!phoneNumber) {
                 alert('Por favor, insira seu WhatsApp!');
                 return;
             }
-
-            if (!dateSelected || !timeSelected) {
-                alert('Por favor, escolha data e horário!');
-                return;
-            }
-
-            dateSelected = document.getElementById('date').value;
-            timeSelected = document.getElementById('time').value;
 
             next(6);
             displayResult();
@@ -256,7 +259,7 @@
 
         function displayResult() {
             const resultDiv = document.getElementById('result');
-            const formattedDate = new Date(dateSelected).toLocaleDateString('pt-BR');
+            const formattedDate = new Date(dateSelected + 'T00:00:00').toLocaleDateString('pt-BR');
             
             resultDiv.innerHTML = `
                 <strong>🎉 Confirmado! 🎉</strong><br><br>
