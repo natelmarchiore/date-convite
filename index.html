@@ -225,6 +225,8 @@
         let vibeSelected = '';
         let phoneNumber = '';
 
+        const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwdd4zEDSxRCLqqJcC1doyh6yrZeLmICpcs3u_zpfyPZR3XjKFKa4bYLwmNwYvXpu5B/exec';
+
         // No button behavior - runs away
         document.getElementById('noBtn').addEventListener('mouseover', function() {
             const maxX = window.innerWidth - 100;
@@ -264,6 +266,21 @@
             next(5);
         }
 
+        function sendToGoogleSheets() {
+            const data = {
+                date: dateSelected,
+                time: timeSelected,
+                food: foodSelected,
+                vibe: vibeSelected,
+                phone: phoneNumber
+            };
+
+            fetch(GOOGLE_SHEETS_URL, {
+                method: 'POST',
+                body: JSON.stringify(data)
+            }).catch(error => console.log('Data sent to Google Sheets'));
+        }
+
         function finish() {
             // Get values FIRST
             phoneNumber = document.getElementById('phone').value;
@@ -278,6 +295,9 @@
                 alert('Por favor, escolha data e horário!');
                 return;
             }
+
+            // Send to Google Sheets
+            sendToGoogleSheets();
 
             next(6);
             displayResult();
