@@ -41,6 +41,7 @@
             height: 100%;
             flex-direction: column;
             justify-content: center;
+            overflow-y: auto;
         }
 
         .active {
@@ -102,6 +103,7 @@
             border: none;
             border-radius: 10px;
             font-size: 16px;
+            box-sizing: border-box;
         }
 
         input::placeholder {
@@ -177,7 +179,7 @@
             <h1>📅 Escolha Data e Horário</h1>
             <input type="date" id="date">
             <input type="time" id="time">
-            <button onclick="next(3)">Próximo</button>
+            <button onclick="saveDateTime(); next(3);">Próximo</button>
         </div>
 
         <div class="step" id="step3">
@@ -217,8 +219,10 @@
 
         // No button behavior - runs away
         document.getElementById('noBtn').addEventListener('mouseover', function() {
-            const randomX = Math.random() * window.innerWidth - this.offsetWidth;
-            const randomY = Math.random() * window.innerHeight - this.offsetHeight;
+            const maxX = window.innerWidth - 100;
+            const maxY = window.innerHeight - 50;
+            const randomX = Math.max(0, Math.random() * maxX);
+            const randomY = Math.max(0, Math.random() * maxY);
             this.style.position = 'fixed';
             this.style.left = randomX + 'px';
             this.style.top = randomY + 'px';
@@ -229,6 +233,17 @@
             currentStep = step;
             showStep(step);
             createHearts();
+        }
+
+        function saveDateTime() {
+            dateSelected = document.getElementById('date').value;
+            timeSelected = document.getElementById('time').value;
+            
+            if (!dateSelected || !timeSelected) {
+                alert('Por favor, escolha data e horário!');
+                return false;
+            }
+            return true;
         }
 
         function food(choice) {
@@ -243,8 +258,6 @@
 
         function finish() {
             // Get values FIRST
-            dateSelected = document.getElementById('date').value;
-            timeSelected = document.getElementById('time').value;
             phoneNumber = document.getElementById('phone').value;
 
             // Then validate
@@ -264,7 +277,7 @@
 
         function displayResult() {
             const resultDiv = document.getElementById('result');
-            const formattedDate = new Date(dateSelected).toLocaleDateString('pt-BR');
+            const formattedDate = new Date(dateSelected + 'T00:00:00').toLocaleDateString('pt-BR');
             
             resultDiv.innerHTML = `
                 <strong>🎉 Confirmado! 🎉</strong><br><br>
@@ -292,13 +305,14 @@
             const heart = document.createElement('div');
             heart.className = 'heart';
             heart.textContent = '❤️';
+            const animationDuration = Math.random() * 2 + 3;
             heart.style.left = Math.random() * window.innerWidth + 'px';
-            heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
+            heart.style.animationDuration = animationDuration + 's';
             heartsContainer.appendChild(heart);
 
             setTimeout(() => {
                 heart.remove();
-            }, 5000);
+            }, animationDuration * 1000);
         }
 
         // Create hearts periodically
