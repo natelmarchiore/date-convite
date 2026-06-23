@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>❤️ Convite Oficial ❤️</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #050505;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .phone {
+            width: 390px;
+            height: 780px;
+            background: #111;
+            border: 12px solid #333;
+            border-radius: 40px;
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 25px rgba(255, 0, 0, 0.4);
+        }
+
+        .step {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .active {
+            display: flex;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: #ccc;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 10px;
+            background: #8b0000;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #a50000;
+            transform: scale(1.05);
+        }
+
+        button.yes {
+            background: #228b22;
+        }
+
+        button.yes:hover {
+            background: #2da52d;
+        }
+
+        button.no {
+            background: #8b0000;
+        }
+
+        button.no:hover {
+            background: #a50000;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: #222;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+
+        input::placeholder {
+            color: #666;
+        }
+
+        input:focus {
+            outline: none;
+            background: #333;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+        }
+
+        .wolf {
+            width: 100%;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .heart {
+            position: fixed;
+            top: -50px;
+            font-size: 25px;
+            animation: fall linear forwards;
+            pointer-events: none;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(120vh);
+                opacity: 0;
+            }
+        }
+
+        #result {
+            background: #222;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        #hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="hearts"></div>
+
+    <div class="phone">
+        <div class="step active" id="step1">
+            <h1>❤️ Convite Oficial ❤️</h1>
+            <p>Aceita sair comigo?</p>
+            <button onclick="next(2)" class="yes">SIM</button>
+            <button id="noBtn" class="no">NÃO</button>
+        </div>
+
+        <div class="step" id="step2">
+            <h1>📅 Escolha Data e Horário</h1>
+            <input type="date" id="date">
+            <input type="time" id="time">
+            <button onclick="next(3)">Próximo</button>
+        </div>
+
+        <div class="step" id="step3">
+            <h1>🍔 O que quer comer?</h1>
+            <button onclick="food('Sushi')">Sushi 🍣</button>
+            <button onclick="food('Pizza')">Pizza 🍕</button>
+            <button onclick="food('Hambúrguer')">Hambúrguer 🍔</button>
+            <button onclick="food('Italiano')">Italiano 🍝</button>
+        </div>
+
+        <div class="step" id="step4">
+            <h1>🌙 Qual a vibe?</h1>
+            <button onclick="vibe('Romântico')">Romântico ❤️</button>
+            <button onclick="vibe('Cinema')">Cinema 🎬</button>
+            <button onclick="vibe('Barzinho')">Barzinho 🍷</button>
+        </div>
+
+        <div class="step" id="step5">
+            <h1>📱 WhatsApp</h1>
+            <input type="tel" id="phone" placeholder="(XX) XXXXX-XXXX">
+            <button onclick="finish()">Finalizar</button>
+        </div>
+
+        <div class="step" id="step6">
+            <h1>ANSIOSO E BOA NOITE</h1>
+            <div id="result"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        let dateSelected = '';
+        let timeSelected = '';
+        let foodSelected = '';
+        let vibeSelected = '';
+        let phoneNumber = '';
+
+        // No button behavior - runs away
+        document.getElementById('noBtn').addEventListener('mouseover', function() {
+            const randomX = Math.random() * window.innerWidth - this.offsetWidth;
+            const randomY = Math.random() * window.innerHeight - this.offsetHeight;
+            this.style.position = 'fixed';
+            this.style.left = randomX + 'px';
+            this.style.top = randomY + 'px';
+        });
+
+        function next(step) {
+            hideAllSteps();
+            currentStep = step;
+            showStep(step);
+            createHearts();
+        }
+
+        function food(choice) {
+            foodSelected = choice;
+            next(4);
+        }
+
+        function vibe(choice) {
+            vibeSelected = choice;
+            next(5);
+        }
+
+        function finish() {
+            phoneNumber = document.getElementById('phone').value;
+
+            if (!phoneNumber) {
+                alert('Por favor, insira seu WhatsApp!');
+                return;
+            }
+
+            if (!dateSelected || !timeSelected) {
+                alert('Por favor, escolha data e horário!');
+                return;
+            }
+
+            dateSelected = document.getElementById('date').value;
+            timeSelected = document.getElementById('time').value;
+
+            next(6);
+            displayResult();
+        }
+
+        function displayResult() {
+            const resultDiv = document.getElementById('result');
+            const formattedDate = new Date(dateSelected).toLocaleDateString('pt-BR');
+            
+            resultDiv.innerHTML = `
+                <strong>🎉 Confirmado! 🎉</strong><br><br>
+                📅 Data: ${formattedDate}<br>
+                🕐 Horário: ${timeSelected}<br>
+                🍽️ Comida: ${foodSelected}<br>
+                🌙 Vibe: ${vibeSelected}<br>
+                📱 WhatsApp: ${phoneNumber}<br><br>
+                <em>Te enviarei os detalhes em breve! 💕</em>
+            `;
+        }
+
+        function hideAllSteps() {
+            for (let i = 1; i <= 6; i++) {
+                document.getElementById('step' + i).classList.remove('active');
+            }
+        }
+
+        function showStep(step) {
+            document.getElementById('step' + step).classList.add('active');
+        }
+
+        function createHearts() {
+            const heartsContainer = document.getElementById('hearts');
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.textContent = '❤️';
+            heart.style.left = Math.random() * window.innerWidth + 'px';
+            heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
+            heartsContainer.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 5000);
+        }
+
+        // Create hearts periodically
+        setInterval(createHearts, 500);
+    </script>
+</body>
+</html>
